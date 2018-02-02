@@ -104,5 +104,5 @@ server.listen(appEnv.port, '0.0.0.0', function () {
   console.log('Dashboard app listening on port', appEnv.port);
 })
 
-// deployment tracker
-require('cf-deployment-tracker-client').track();
+// metrics collector; remove or comment out to disable
+require("metrics-tracker-client").track();
