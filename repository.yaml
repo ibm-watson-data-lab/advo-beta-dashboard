@@ -1,0 +1,8 @@
+id: https://github.com/ibm-watson-data-lab/advo-beta-dashboard
+runtimes: 
+ - Cloud Foundry
+services: 
+ - Compose for Redis
+event_id: web
+event_organizer: wdp-devadv
+language: nodejs
