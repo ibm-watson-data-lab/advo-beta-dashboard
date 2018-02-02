@@ -22,11 +22,22 @@ console.log(JSON.stringify(appEnv));
 var redis_url = process.env.REDIS_URL;
 if (!redis_url) {
   // Custom REDIS_URL is not defined. If a Redis service instance is bound to this app use it.
-  if((appEnv.hasOwnProperty('services')) && (appEnv.services.hasOwnProperty('compose-for-redis')) && (appEnv.services['compose-for-redis'].length > 0)) {
-    var redisSvc = appEnv.services['compose-for-redis'][0];
-    if((redisSvc.hasOwnProperty('credentials')) && redisSvc.credentials.hasOwnProperty('uri')) {
-      redis_url = redisSvc.credentials.uri;
-    } 
+  if(appEnv.hasOwnProperty('services')) {
+    // check if a Compose for Redis service instance is bound to this app
+    if ((appEnv.services.hasOwnProperty('compose-for-redis')) && (appEnv.services['compose-for-redis'].length > 0)) { 
+      var redisSvc = appEnv.services['compose-for-redis'][0];
+      if((redisSvc.hasOwnProperty('credentials')) && redisSvc.credentials.hasOwnProperty('uri')) {
+        redis_url = redisSvc.credentials.uri;
+      } 
+    }
+    // check if a RedisCloud service instance is bound to this app
+    else if ((appEnv.services.hasOwnProperty('rediscloud')) && (appEnv.services['rediscloud'].length > 0)) { 
+      var redisSvc = appEnv.services['rediscloud'][0];
+      if((redisSvc.hasOwnProperty('credentials')) && redisSvc.credentials.hasOwnProperty('hostname') && 
+          redisSvc.credentials.hasOwnProperty('password') && redisSvc.credentials.hasOwnProperty('port')) {
+        redis_url = 'redis://x:' + redisSvc.credentials['password'] + '@' + redisSvc.credentials['hostname'] + ':' + redisSvc.credentials['port'];
+      } 
+    }
   }
 }
 
